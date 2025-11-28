@@ -1,12 +1,9 @@
 // Imports
 import express from 'express';
-import redis from 'redis';
+import redisClient from "../Utils/Redis.js"
 import { randomUUID } from 'crypto';
 
 // Redis Client Setup
-const redisClient = redis.createClient({
-    url: process.env.REDIS_URL || 'redis://cipherdrop-redis:6379'
-});
 redisClient.on('error', (err) => {
     console.log('Redis Client Error', err);
 })
