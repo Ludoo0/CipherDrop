@@ -1,0 +1,36 @@
+{
+  "name": "cipherdropbackend",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/Ludoo0/CipherDrop#readme",
+  "bugs": {
+    "url": "https://github.com/Ludoo0/CipherDrop/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ludoo0/CipherDrop.git"
+  },
+  "license": "MIT",
+  "author": "Ludoo0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./dist/index.js",
+    "build": "tsc",
+    "dev": "ts-node ./src/index.ts",
+    "lint": "lint ./src/**/*.ts"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "helm": "^0.2.1",
+    "helmet": "^8.1.0",
+    "tsc": "^2.0.4",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.5",
+    "@types/node": "^24.10.1",
+    "globals": "^16.5.0",
+    "ts-node": "^10.9.2"
+  }
+}
