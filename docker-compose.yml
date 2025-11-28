@@ -1,0 +1,37 @@
+services:
+  backend:
+    build:
+      context: ./src/api
+      dockerfile: Dockerfile
+    container_name: cipherdrop-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    depends_on:
+      - redis
+
+  frontend:
+    image: nginx:alpine
+    container_name: cipherdrop-frontend
+    ports:
+      - "8001:80"
+    volumes:
+      - ./src/web/public:/usr/share/nginx/html
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+  redis:
+    image: redis:7
+    container_name: cipherdrop-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: [ "redis-server", "--appendonly", "yes" ]
+    restart: unless-stopped
+
+volumes:
+    redis-data:

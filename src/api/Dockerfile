@@ -1,22 +1,20 @@
-FROM node:18-alpine AS base
+# Basisimage
+FROM node:20-alpine
+
+# Arbeitsverzeichnis
 WORKDIR /app
 
-FROM base AS dependencies
-COPY package.json package-lock.json ./
-RUN npm install
+# Package-Dateien zuerst kopieren (bessere Caching-Effizienz)
+COPY package*.json ./
 
-FROM dependencies AS build
+# Dependencies installieren
+RUN npm install --production
+
+# Restlichen Code kopieren
 COPY . .
-RUN npm run build
 
-FROM base AS production
-WORKDIR /app
-
-COPY package.json package-lock.json ./
-RUN npm install --only=production
-
-COPY --from=build /app/dist ./dist
-
+# Falls dein Server auf Port 3000 läuft
 EXPOSE 3000
 
-CMD ["node", "dist/index.js"]
+# Startbefehl
+CMD [ "npm", "start" ]
