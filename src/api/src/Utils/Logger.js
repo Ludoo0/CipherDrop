@@ -12,7 +12,8 @@ export class Logger {
         REDIS: styleText("red", "REDIS"),
         ROUTES: styleText("cyan", "ROUTES"),
         AUTH: styleText("blue", "AUTH"),
-        DB: styleText("green", "DB")
+        DB: styleText("green", "DB"),
+        MIDDLEWARE: styleText("magenta", "MIDDLEWARE")
     }
     static log(level, context, message) {
         const timestamp = new Date().toISOString();
