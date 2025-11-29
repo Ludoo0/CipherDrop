@@ -1,8 +1,5 @@
 // Import Utils
 import express from 'express';
-import redisClient from "../Utils/Redis.js"
-import { randomUUID } from 'crypto';
-import {Logger} from "../Utils/Logger.js";
 
 // Import Handlers
 import {SecretRegisterHandler} from "../Handlers/SecretRegisterHandler.js";

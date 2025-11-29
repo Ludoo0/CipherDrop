@@ -1,4 +1,4 @@
-import { z, ZodError } from 'zod';
+import { ZodError } from 'zod';
 import {Logger} from "../Utils/Logger.js";
 
 export function validateData(schema) {
