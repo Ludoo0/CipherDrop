@@ -47,7 +47,6 @@ function fetchRegisterAPi(payload){
 
 function encryptMessage(message, password) {
     // AES-Verschlüsselung mit Passwort
-    const encryptedMessage = CryptoJS.AES.encrypt(message, password).toString();
-    return encryptedMessage;
+    return CryptoJS.AES.encrypt(message, password).toString();
 }
 
