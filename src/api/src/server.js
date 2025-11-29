@@ -2,6 +2,7 @@ import express from "express";
 import helmet from "helmet";
 import dotenv from "dotenv";
 dotenv.config();
+import {Logger} from "./Utils/Logger.js";
 
 
 const app = express();
@@ -11,7 +12,7 @@ const PORT = process.env.PORT || 8000;
 app.use(helmet());
 app.use(express.json());
 app.use((req, res, next) => {
-    console.log(`${new Date().toISOString()} - ${req.method} ${req.originalUrl}`);
+    Logger.log(Logger.logLevels.INFO, Logger.contexts.ROUTES, `${req.method} ${req.originalUrl}`);
     next();
 });
 
@@ -28,4 +29,5 @@ app.get('/health', (req, res) => {
 // Start server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
+    Logger.log(Logger.logLevels.INFO, Logger.contexts.GENERAL, `Server started on port ${PORT}`);
 });

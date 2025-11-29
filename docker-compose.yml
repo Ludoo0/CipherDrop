@@ -8,6 +8,7 @@ services:
       - "8000:8000"
     environment:
       - NODE_ENV=production
+      - FORCE_COLOR=1
     restart: unless-stopped
     depends_on:
       - redis

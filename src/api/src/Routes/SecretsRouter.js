@@ -3,13 +3,6 @@ import express from 'express';
 import redisClient from "../Utils/Redis.js"
 import { randomUUID } from 'crypto';
 
-// Redis Client Setup
-redisClient.on('error', (err) => {
-    console.log('Redis Client Error', err);
-})
-
-redisClient.connect().catch(console.error);
-
 // Express Router
 const router = express.Router();
 
