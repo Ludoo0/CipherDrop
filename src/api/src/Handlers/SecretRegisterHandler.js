@@ -1,7 +1,7 @@
 import {randomUUID} from "crypto";
 import redisClient from "../Utils/Redis.js";
 import {Logger} from "../Utils/Logger.js";
-
+import qrcode from "qrcode";
 
 export async function SecretRegisterHandler(req, res){
     const body = req.body;
@@ -20,6 +20,8 @@ export async function SecretRegisterHandler(req, res){
     await redisClient.set("secrets:" + id, JSON.stringify(secretData), {
         EX: expiration
     });
+    const qrCodeDataURL = await qrcode.toDataURL(`${process.env.BASE_URL}/secrets/${id}`);
+
     Logger.log(Logger.logLevels.DEBUG, Logger.contexts.ROUTES, `Registered new secret with id ${id}, expires in ${expiration} seconds`);
-    res.status(200).json({id, expiration});
+    res.status(200).json({id, expiration, qrCodeDataURL});
 }

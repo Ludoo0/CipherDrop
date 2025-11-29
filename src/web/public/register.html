@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    
+    
+</head>
+<body>
+    
+    <!-- Navbar -->
+    <div class="navbar">
+        <h1>Cipherdrop</h1>
+        <div class="dropdown">
+            <button class="dropbtn">Menu</button>
+            <div class="dropdown-content">
+                <a href="index.html">Home</a>
+                <a href="register.html">Register Message</a>
+                <a href="read.html">Read Message</a>
+            </div>
+        </div>
+    </div>
+    <!-- Main Content -->
+    <div class="main-content">
+        <form onsubmit="registerMessage(event)">
+            <h2>Register a New Message</h2>
+            <label for="message">Message:</label><br>
+            <textarea id="message" name="message" rows="4" cols="50" required></textarea><br><br>
+            
+            <label for="password">Password for Encryption:</label> 
+            <input type="password" id="password" name="password" required><br><br>
+            
+            <label for="ttl">Time to Life:</label>
+            <input type="number" id="ttl" name="ttl" min="1" max="86400" value="24" required> seconds<br><br>
+
+            <label for="burnAfter">Burn After </label>
+            <input type="number" id="burnAfter" name="burnAfter" min="1" max="100" value="1" required> openings<br><br>
+
+            <button type="submit">Register Message</button>
+        </form>
+        <div id="result">
+
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+</body>
+</html>
