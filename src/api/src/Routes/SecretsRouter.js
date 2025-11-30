@@ -17,7 +17,7 @@ import {SecretGetMessageRequestSchema} from "../Schemas/SecretGetMessageRequestS
 const router = express.Router();
 
 router.post('/register', validateData(SecretRegisterRequestSchema), SecretRegisterHandler);
-router.get("/exists/:id", validateData(SecretGetMessageRequestSchema), SecretExistanceHandler);
+router.get("/exists/:id", SecretExistanceHandler);
 router.get('/:id', SecretGetMessageHandler);
 
 

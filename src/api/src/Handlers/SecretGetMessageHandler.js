@@ -3,11 +3,11 @@ import {Logger} from "../Utils/Logger.js";
 
 export async function SecretGetMessageHandler(req, res) {
     const id = req.params.id;
-    const body = req.body;
-    if (!body || !body.controlmessage) {
+    const query = req.query;
+    if (!query || !query.controlmessage) {
         return res.status(400).json({error: 'controlmessage is required'});
     }
-    const controlmessage = body.controlmessage;
+    const controlmessage = query.controlmessage;
 
     const secretString = await redisClient.get("secrets:" + id);
     if (!secretString) {
