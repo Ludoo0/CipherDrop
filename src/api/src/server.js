@@ -1,7 +1,7 @@
 import express from "express";
 import helmet from "helmet";
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({quiet: true});
 import {Logger} from "./Utils/Logger.js";
 
 const app = express();
