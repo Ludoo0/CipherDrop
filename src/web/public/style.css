@@ -61,6 +61,26 @@ body {
 .main-content{
     height: calc(100vh - 80px); /* Adjust height considering navbar height */
     padding: 20px;
+  }
+.readAndRegistermain-content {
+  display: flex;
+  justify-content: center;
+}
+.main-content button {
+  border-radius: 5px;
+  padding: 5px;
+  background-color: rgba(62, 142, 65, 0.884);
+}
+.main-content button:hover {
+  cursor: pointer;
+  padding: 6px;
+  background-color: rgba(60, 172, 64, 0.884);
+}
+.main-content textarea {
+  border-radius: 10px;
+}
+.main-content input {
+  border-radius: 5px;
 }
 #result {
     display: flex;
