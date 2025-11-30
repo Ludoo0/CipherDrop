@@ -11,7 +11,6 @@ import {validateData} from "../Middleware/validationMiddleware.js";
 
 // Import Schemas
 import {SecretRegisterRequestSchema} from "../Schemas/SecretRegisterRequestSchema.js";
-import {SecretGetMessageRequestSchema} from "../Schemas/SecretGetMessageRequestSchema.js";
 
 // Express Router
 const router = express.Router();
