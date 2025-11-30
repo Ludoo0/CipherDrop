@@ -2,8 +2,9 @@ import {randomUUID} from "crypto";
 import redisClient from "../Utils/Redis.js";
 import {Logger} from "../Utils/Logger.js";
 import qrcode from "qrcode";
+import type { Request, Response } from "express";
 
-export async function SecretRegisterHandler(req, res){
+export async function SecretRegisterHandler(req: Request, res: Response) {
     const body = req.body;
     if (!body || !body.securemessage || !body.controlmessage) {
         return res.status(400).json({error: 'securemessage and controlmessage are required'});

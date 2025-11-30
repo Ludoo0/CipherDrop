@@ -1,7 +1,8 @@
 import redisClient from "../Utils/Redis.js";
 import {Logger} from "../Utils/Logger.js";
+import type { Request, Response } from "express";
 
-export async function SecretGetMessageHandler(req, res) {
+export async function SecretGetMessageHandler(req: Request, res: Response) {
     const id = req.params.id;
     const query = req.query;
     if (!query || !query.controlmessage) {
