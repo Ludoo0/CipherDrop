@@ -7,6 +7,7 @@ export default defineConfig([
         files: ["**/*.js"],
         rules: {
             semi: "error",
+            "prefer-const": "error",
             "no-console": ["error", { "allow": ["log", "warn", "error"] }]
         },
     },
