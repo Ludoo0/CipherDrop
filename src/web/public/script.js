@@ -51,3 +51,72 @@ function encryptMessage(message, password) {
     return CryptoJS.AES.encrypt(message, password).toString();
 }
 
+function readMessage(event) {
+    event.preventDefault();
+    const id = document.getElementById('messageId').value;
+    const password = document.getElementById('password').value;
+    const ControlMessage = "ControlMessage";
+    const key = CryptoJS.SHA256(password);
+    const hmacControlMessage = CryptoJS.HmacSHA256(ControlMessage, key).toString();
+
+    const payload = {
+        controlmessage: hmacControlMessage,
+    };
+
+    fetchExistsAPi(id).then(data => {
+        if (data.exists === false) {
+            document.getElementById('result').innerHTML = `<p>Error: <strong>Message does not exist or has expired!</strong></p>`;
+        } else {
+
+            fetchReadAPi(payload, id).then(data => {
+                if (data.error && data.error === 'Invalid controlmessage') {
+                    document.getElementById('result').innerHTML = `<p>Error: <strong>Password is Wrong!</strong></p>`;
+                } else if (data.error) {
+                    document.getElementById('result').innerHTML = `<p>Error: <strong>${data.error}</strong></p>`;
+                }
+                if (!data.error) {
+                    const decryptedMessage = decryptMessage(data.securemessage, password);
+                    document.getElementById('result').innerHTML = `<p>Decrypted Message: <strong>${decryptedMessage}</strong> </p><p>Opens: <strong>${data.opens}/${data.burnsAfterXOpens}</strong></p>`;
+                }
+            });
+        }
+    })
+}
+
+function fetchExistsAPi(id){
+    return fetch(`/api/secrets/exists/${id}`, {
+        method: 'GET',
+    })
+        .then(response => response.json())
+        .then(data => {
+            return data; // Hier wird der `data`-Wert korrekt zurückgegeben
+        })
+        .catch(error => {
+            console.error("Fehler bei der API-Anfrage:", error);
+            return {}; // Rückgabe von leerem Objekt bei Fehler
+        });
+}
+
+function fetchReadAPi(payload, id){
+    const params = new URLSearchParams(payload).toString();
+    return fetch(`/api/secrets/${id}?${params}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => response.json())
+        .then(data => {
+            return data; // Hier wird der `data`-Wert korrekt zurückgegeben
+        })
+        .catch(error => {
+            console.error("Fehler bei der API-Anfrage:", error);
+            return {}; // Rückgabe von leerem Objekt bei Fehler
+        });
+}
+
+function decryptMessage(encryptedMessage, password) {
+    // AES-Entschlüsselung mit Passwort
+    const bytes = CryptoJS.AES.decrypt(encryptedMessage, password);
+    return bytes.toString(CryptoJS.enc.Utf8);
+}
