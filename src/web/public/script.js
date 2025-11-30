@@ -13,7 +13,7 @@ function registerMessage(event) {
         securemessage: encryptedMessage,
         controlmessage: encryptedControlMessage,
         ttl: parseInt(ttl),
-        burnsAfterRead: parseInt(burnsAfterRead) || 1,
+        burnsAfterXOpens: parseInt(burnsAfterRead) || 1,
     };
     fetchRegisterAPi(payload).then(data => {
         if (data.id) {
