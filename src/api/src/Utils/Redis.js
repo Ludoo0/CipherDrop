@@ -8,7 +8,7 @@ const redisClient = redis.createClient({
 });
 redisClient.on('error', (err) => {
     Logger.log(Logger.logLevels.ERROR, Logger.contexts.REDIS, `Redis Client Error: ${err.message}`);
-})
+});
 redisClient.connect()
     .then(() => {
         Logger.log(Logger.logLevels.INFO, Logger.contexts.REDIS, 'Connected to Redis server');

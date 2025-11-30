@@ -6,7 +6,7 @@ export class Logger {
         WARN: styleText("yellow", "WARN"),
         ERROR: styleText("red", "ERROR"),
         DEBUG: styleText("green", "DEBUG")
-    }
+    };
     static contexts = {
         GENERAL: styleText("green", "GENERAL"),
         REDIS: styleText("red", "REDIS"),
@@ -14,7 +14,7 @@ export class Logger {
         AUTH: styleText("blue", "AUTH"),
         DB: styleText("green", "DB"),
         MIDDLEWARE: styleText("magenta", "MIDDLEWARE")
-    }
+    };
     static log(level, context, message) {
         const timestamp = new Date().toISOString();
         console.log(`[${styleText("grey", timestamp)}] [${level}] [${context}] ${message}`);

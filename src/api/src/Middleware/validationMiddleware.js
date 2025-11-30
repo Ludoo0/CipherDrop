@@ -4,7 +4,7 @@ import {Logger} from "../Utils/Logger.js";
 export function validateData(schema) {
     return (req, res, next) => {
         try {
-            schema.parse(req.body)
+            schema.parse(req.body);
             next();
         } catch (error) {
             if (error instanceof ZodError) {
@@ -23,5 +23,5 @@ export function validateData(schema) {
             }
 
         }
-    }
+    };
 }
