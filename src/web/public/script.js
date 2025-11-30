@@ -7,11 +7,12 @@ function registerMessage(event) {
     const controlmessage = "ControlMessage";
 
     const encryptedMessage = encryptMessage(message, password);
-    const encryptedControlMessage = encryptMessage(controlmessage, password);
+    const key = CryptoJS.SHA256(password);
+    const hmacControlMessage = CryptoJS.HmacSHA256(controlmessage, key).toString();
 
     const payload = {
         securemessage: encryptedMessage,
-        controlmessage: encryptedControlMessage,
+        controlmessage: hmacControlMessage,
         ttl: parseInt(ttl),
         burnsAfterXOpens: parseInt(burnsAfterRead) || 1,
     };
