@@ -15,7 +15,7 @@ export class Logger {
         DB: styleText("green", "DB"),
         MIDDLEWARE: styleText("magenta", "MIDDLEWARE")
     };
-    static log(level, context, message) {
+    static log(level: string, context: string, message: string) {
         const timestamp = new Date().toISOString();
         console.log(`[${styleText("grey", timestamp)}] [${level}] [${context}] ${message}`);
     }
