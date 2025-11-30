@@ -1,13 +1,18 @@
 import express from "express";
+import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import dotenv from "dotenv";
 dotenv.config({quiet: true});
 import {Logger} from "./Utils/Logger.js";
-
 const app = express();
 const PORT = process.env.PORT || 8000;
 
 // Middleware
+const limiter = rateLimit({
+    windowMs: 5*60*1000,
+    max: 10,
+});
+app.use(limiter);
 app.use(helmet());
 app.use(express.json());
 
