@@ -1,3 +1,13 @@
+const params = new URLSearchParams(window.location.search);
+const messageId = params.get('messageId');
+
+if (messageId) {
+    if (document.getElementById('messageId')){
+        document.getElementById('messageId').value = messageId;
+    }
+}
+
+
 function registerMessage(event) {
     event.preventDefault();
     const message = document.getElementById('message').value;

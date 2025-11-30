@@ -21,7 +21,7 @@ export async function SecretRegisterHandler(req: Request, res: Response) {
     await redisClient.set("secrets:" + id, JSON.stringify(secretData), {
         EX: expiration
     });
-    const qrCodeDataURL = await qrcode.toDataURL(`${process.env.BASE_URL}/secrets/${id}`);
+    const qrCodeDataURL = await qrcode.toDataURL(`${process.env.BASE_URL}/read?messageId=${id}`);
 
     Logger.log(Logger.logLevels.DEBUG, Logger.contexts.ROUTES, `Registered new secret with id ${id}, expires in ${expiration} seconds`);
     res.status(200).json({id, expiration, qrCodeDataURL});
