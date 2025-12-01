@@ -6,6 +6,8 @@ services:
     container_name: cipherdrop-backend
     ports:
       - "8000:8000"
+    env_file:
+      - src/api/.env
     environment:
       - NODE_ENV=production
       - FORCE_COLOR=1

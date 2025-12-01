@@ -8,6 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 // Middleware
+app.set('trust proxy', 1);
 const limiter = rateLimit({
     windowMs: 5*60*1000,
     max: 10,
