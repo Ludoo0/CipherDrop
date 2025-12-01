@@ -1,6 +1,7 @@
 body {
     font-family: "Roboto", sans-serif;
     margin: 0;
+    background-color: #ECECEC;
 }
 
 /* Navbar */
@@ -66,6 +67,14 @@ body {
   display: flex;
   justify-content: center;
 }
+.main-content a {
+    text-decoration: none;
+}
+.main-content a:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 .main-content button {
   border-radius: 5px;
   padding: 5px;
@@ -82,8 +91,12 @@ body {
 .main-content input {
   border-radius: 5px;
 }
+
 #result {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+#result img {
+    padding-left: 20px;
 }

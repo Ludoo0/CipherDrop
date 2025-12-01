@@ -24,17 +24,19 @@
         </div>
     </div>
     <!-- Main Content -->
-    <div class="main-content readAndRegistermain-content">
-        <form onsubmit="readMessage(event)">
-            <h2>Read a Message</h2>
-            <label for="messageId">Message ID:</label><br>
-            <input type="text" id="messageId" name="messageId" required><br><br>
+    <div class="main-content">
+        <div class="readAndRegistermain-content">
+            <form onsubmit="readMessage(event)">
+                <h2>Read a Message</h2>
+                <label for="messageId">Message ID:</label><br>
+                <input type="text" id="messageId" name="messageId" required><br><br>
             
-            <label for="password">Password for Decryption:</label> 
-            <input type="password" id="password" name="password" required><br><br>
+                <label for="password">Password for Decryption:</label>
+                <input type="password" id="password" name="password" required><br><br>
 
-            <button type="submit">Read Message</button>
-        </form>
+                <button type="submit">Read Message</button>
+            </form>
+        </div>
         <div id="result">
         </div>
     </div>

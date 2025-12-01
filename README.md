@@ -2,6 +2,9 @@
 
 Cipherdrop is a secure text and file sharing application that ensures your sensitive information remains private. With Zero Knowledge encryption, you can share messages and files with confidence, knowing that only the intended recipient can access the content.
 
+## Technologies
+This Repository uses Node.js with Express.js in Typescript in the Backend and HTML, CSS and normal JS in the Frontend.
+
 ## Requirements
 - docker and docker-compose
 
