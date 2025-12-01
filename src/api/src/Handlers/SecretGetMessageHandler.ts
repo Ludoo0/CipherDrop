@@ -12,6 +12,11 @@ export async function SecretGetMessageHandler(req: Request, res: Response) {
 
     const secretString = await redisClient.get("secrets:" + id);
     if (!secretString) {
+        Logger.log(
+            Logger.logLevels.DEBUG,
+            Logger.contexts.ROUTES,
+            `Secret with id ${id} could not be found`
+        )
         return res.status(404).json({error: 'Secret not found or has expired'});
     }
 
