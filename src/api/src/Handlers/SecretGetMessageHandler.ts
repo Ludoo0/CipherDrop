@@ -37,9 +37,10 @@ export async function SecretGetMessageHandler(req: Request, res: Response) {
     }
 
     res.status(200).json({
-        securemessage: secretData.securemessage,
+        message: secretData.message,
         controlmessage: secretData.controlmessage,
         opens: secretData.opens,
-        burnsAfterXOpens: secretData.burnsAfterXOpens
+        burnsAfterXOpens: secretData.burnsAfterXOpens,
+        file: secretData.file || null,
     });
 }

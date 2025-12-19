@@ -6,16 +6,21 @@ import type { Request, Response } from "express";
 
 export async function SecretRegisterHandler(req: Request, res: Response) {
     const body = req.body;
-    if (!body || !body.securemessage || !body.controlmessage) {
+    if (!body || !body.message || !body.controlmessage) {
         return res.status(400).json({error: 'securemessage and controlmessage are required'});
     }
 
+    if (!body.file) {
+        body.file=null;
+    }
+
     const id = randomUUID();
-    const secretData = {
-        securemessage: body.securemessage,
+    const secretData: secretData = {
+        message: body.message,
         controlmessage: body.controlmessage,
         burnsAfterXOpens: body.burnsAfterXOpens || 1,
-        opens: 0
+        opens: 0,
+        file: body.file,
     };
     const expiration = body.ttl ? parseInt(body.ttl) : 3600; // Default to 24 hours
     await redisClient.set("secrets:" + id, JSON.stringify(secretData), {
@@ -25,4 +30,17 @@ export async function SecretRegisterHandler(req: Request, res: Response) {
 
     Logger.log(Logger.logLevels.DEBUG, Logger.contexts.ROUTES, `Registered new secret with id ${id}, expires in ${expiration} seconds`);
     res.status(200).json({id, expiration, qrCodeDataURL});
+}
+
+
+type secretData = {
+    message: string;
+    controlmessage: string;
+    burnsAfterXOpens: number;
+    opens: number;
+    file: {
+        name: string;
+        type: string;
+        data: string;
+    } | null;
 }
