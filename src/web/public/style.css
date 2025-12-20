@@ -20,6 +20,9 @@ body {
     width: 70px;
     border-radius: 50%;
 }
+.navbar a:hover {
+    cursor: pointer;
+}
 
 .dropdown {
     position: relative;
