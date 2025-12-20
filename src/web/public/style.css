@@ -20,6 +20,9 @@ body {
     width: 70px;
     border-radius: 50%;
 }
+.navbar a:hover {
+    cursor: pointer;
+}
 
 .dropdown {
     position: relative;
@@ -102,7 +105,19 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 #result img {
     padding-left: 20px;
+}
+#result a {
+    padding: 10px 20px;
+    font-weight: bold;
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+    border-radius: 15px;
+}
+#result a:hover {
+    background-color: #bcbcbc;
 }
