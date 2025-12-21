@@ -20,34 +20,30 @@ pool.connect()
 
 
 
-export async function getUserById(userId: string) {
-    const cacheKey = `user:${userId}`;
+export async function getUserByName(userName: string) {
+    const cacheKey = `user:${userName}`;
 
     try {
         const redisUser = await redisClient.get(cacheKey);
 
         if (redisUser) {
-            Logger.log(Logger.logLevels.DEBUG, Logger.contexts.DB, `Cache Hit: ${userId}`);
+            Logger.log(Logger.logLevels.DEBUG, Logger.contexts.DB, `Cache Hit: ${userName}`);
             return JSON.parse(redisUser);
         }
 
-        const result = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
+        const result = await pool.query('SELECT * FROM users WHERE username = $1', [userName]);
         const user = result.rows[0];
 
         if (user) {
             await redisClient.set(cacheKey, JSON.stringify(user), {
                 EX: 3600 //  1 hour expiration
             });
-            Logger.log(Logger.logLevels.DEBUG, Logger.contexts.DB, `Cache Miss: ${userId} saved to Redis`);
+            Logger.log(Logger.logLevels.DEBUG, Logger.contexts.DB, `Cache Miss: ${userName} saved to Redis`);
         }
         return user;
     } catch (error) {
         Logger.log(Logger.logLevels.ERROR, Logger.contexts.REDIS, `Redis Error: ${error}`);
-        const result = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
+        const result = await pool.query('SELECT * FROM users WHERE username = $1', [userName]);
         return result.rows[0];
     }
-}
-export async function getUserByUsername(username: string) {
-    const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
-    return result.rows[0];
 }

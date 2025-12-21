@@ -3,6 +3,7 @@ import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import dotenv from "dotenv";
 import {Logger} from "./Utils/Logger.js";
+import session from "express-session";
 
 dotenv.config({quiet: true});
 const app = express();
@@ -18,6 +19,17 @@ app.use(limiter);
 app.use(helmet());
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'defaultsupersecuresecret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: false,
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000, // 1 day
+    }
+}));
 
 // Routes
 app.use("/secrets", (await import('./Routes/SecretsRouter.js')).default);

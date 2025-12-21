@@ -1,9 +1,9 @@
 import type {Request, Response} from "express";
 import validator from "validator";
-import {getUserByUsername, pool} from "../Utils/Database.js";
+import {getUserByName, pool} from "../Utils/Database.js";
 import redisClient from "../Utils/Redis.js";
 
-export async function UserRegisterHandler(req: Request, res: Response){
+export async function userRegisterHandler(req: Request, res: Response){
     const { email, username, passwordHash } = req.body;
     if (!validator.isEmail(email)) {
         return res.status(400).json({ error: 'Invalid email' });
@@ -13,26 +13,24 @@ export async function UserRegisterHandler(req: Request, res: Response){
     }
 
     try {
-        const existingUser = await getUserByUsername(username);
+        const existingUser = await getUserByName(username);
         if (existingUser) {
             return res.status(409).json({ error: 'Username already exists' });
         }
-        const newUserId = Math.random().toString(36).substr(2, 9);
         const newUser = {
-            id: newUserId,
-            email: email,
             username: username,
+            email: email,
             passwordHash: passwordHash,
             createdAt: new Date()
         };
         await pool.query(
-            'INSERT INTO users (id, email, username, password_hash, created_at) VALUES ($1, $2, $3, $4, $5)',
-            [newUser.id, newUser.email, newUser.username, newUser.passwordHash, newUser.createdAt]
+            'INSERT INTO users (username, email, password_hash, created_at) VALUES ($1, $2, $3, $4)',
+            [newUser.username, newUser.email, newUser.passwordHash, newUser.createdAt]
         );
-        await redisClient.set("user:" + newUserId, JSON.stringify(newUser), {
+        await redisClient.set("user:" + username, JSON.stringify(newUser), {
             EX: 3600 // 1 hour expiration
         });
-        res.status(201).json({ message: 'User registered successfully', userId: newUserId });
+        res.status(201).json({ message: 'User registered successfully', userName: username });
     } catch (error) {
         console.error('Error registering user:', error);
         res.status(500).json({ error: 'Internal server error' });
