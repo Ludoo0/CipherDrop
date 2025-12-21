@@ -31,6 +31,13 @@ export async function userRegisterHandler(req: Request, res: Response){
             EX: 3600 // 1 hour expiration
         });
         res.status(201).json({ message: 'User registered successfully', userName: username });
+        // Automatically log in the user after registration
+        req.session.isLoggedIn = true;
+        req.session.username = username;
+        return req.session.save((err) => {
+            if (err) return res.status(500).send("Fehler beim Speichern");
+        });
+
     } catch (error) {
         console.error('Error registering user:', error);
         res.status(500).json({ error: 'Internal server error' });
