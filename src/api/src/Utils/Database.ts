@@ -1,5 +1,6 @@
 import {Pool} from 'pg';
 import {Logger} from './Logger.js';
+import redisClient from "./Redis.js";
 
 export const pool = new Pool({
     host: process.env.DB_HOST,
@@ -9,6 +10,44 @@ export const pool = new Pool({
     database: process.env.DB_NAME,
 });
 
-pool.on('connect', () => {
-    Logger.log(Logger.logLevels.INFO, Logger.contexts.DB, 'Successfully connected to the database');
-});
+pool.connect()
+    .then(r =>
+        Logger.log(Logger.logLevels.INFO, Logger.contexts.DB, 'Database connection pool created')
+    )
+    .catch(err =>
+        Logger.log(Logger.logLevels.ERROR, Logger.contexts.DB, `Database connection error: ${err.message}`)
+    );
+
+
+
+export async function getUserById(userId: string) {
+    const cacheKey = `user:${userId}`;
+
+    try {
+        const redisUser = await redisClient.get(cacheKey);
+
+        if (redisUser) {
+            Logger.log(Logger.logLevels.DEBUG, Logger.contexts.DB, `Cache Hit: ${userId}`);
+            return JSON.parse(redisUser);
+        }
+
+        const result = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
+        const user = result.rows[0];
+
+        if (user) {
+            await redisClient.set(cacheKey, JSON.stringify(user), {
+                EX: 3600 //  1 hour expiration
+            });
+            Logger.log(Logger.logLevels.DEBUG, Logger.contexts.DB, `Cache Miss: ${userId} saved to Redis`);
+        }
+        return user;
+    } catch (error) {
+        Logger.log(Logger.logLevels.ERROR, Logger.contexts.REDIS, `Redis Error: ${error}`);
+        const result = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
+        return result.rows[0];
+    }
+}
+export async function getUserByUsername(username: string) {
+    const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+    return result.rows[0];
+}
