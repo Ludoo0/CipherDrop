@@ -2,8 +2,9 @@ import express from "express";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import dotenv from "dotenv";
-dotenv.config({quiet: true});
 import {Logger} from "./Utils/Logger.js";
+
+dotenv.config({quiet: true});
 const app = express();
 const PORT = process.env.PORT || 8000;
 
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 // Routes
 app.use("/secrets", (await import('./Routes/SecretsRouter.js')).default);
+app.use("/users", (await import('./Routes/UsersRouter.js')).default);
 
 // Health Check Endpoint
 app.get('/health', (req, res) => {

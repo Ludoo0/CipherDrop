@@ -35,6 +35,18 @@ services:
       - redis-data:/data
     command: [ "redis-server", "--appendonly", "yes" ]
     restart: unless-stopped
-
+  db:
+    image: postgres:15
+    container_name: cipherdrop-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=cipherdrop
+      - POSTGRES_PASSWORD=securepassword
+      - POSTGRES_DB=cipherdropdb
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    restart: unless-stopped
 volumes:
     redis-data:
+    db-data:
