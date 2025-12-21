@@ -11,7 +11,7 @@ export const pool = new Pool({
 });
 
 pool.connect()
-    .then(r =>
+    .then( () =>
         Logger.log(Logger.logLevels.INFO, Logger.contexts.DB, 'Database connection pool created')
     )
     .catch(err =>
