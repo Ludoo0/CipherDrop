@@ -27,7 +27,7 @@ export async function getUserByName(userName: string) {
         const redisUser = await redisClient.get(cacheKey);
 
         if (redisUser) {
-            Logger.log(Logger.logLevels.DEBUG, Logger.contexts.DB, `Cache Hit: ${userName}`);
+            Logger.log(Logger.logLevels.DEBUG, Logger.contexts.REDIS, `Cache Hit: ${userName}`);
             return JSON.parse(redisUser);
         }
 

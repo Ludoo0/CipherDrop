@@ -6,7 +6,9 @@ export async function userLoginHandler(req: Request, res: Response) {
 
     try {
         const user = await getUserByName(username);
-        if (!user || user.password_hash !== passwordHash) {
+        console.log(user);
+        console.log(passwordHash);
+        if (!user || user.passwordHash !== passwordHash) {
             return res.status(401).json({error: 'Invalid username or password'});
         }
 

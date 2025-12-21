@@ -4,6 +4,7 @@ import express from 'express';
 // Import Handlers
 import {userRegisterHandler} from "../Handlers/UserRegisterHandler.js";
 import {userLoginHandler, userLogoutHandler} from "../Handlers/UserLoginAndLogoutHandler.js";
+import {userDeletionHandler} from "../Handlers/UserDeletionHandler.js";
 
 // Import Middlewares
 import {validateData} from "../Middleware/validationMiddleware.js";
@@ -18,6 +19,7 @@ const router = express.Router();
 
 router.post("/register", validateData(UserRegisterRequestSchema), userRegisterHandler);
 router.post("/login", validateData(UserLoginRequestSchema), userLoginHandler);
-router.post("/logout", authMiddleware, userLogoutHandler);
+router.delete("/logout", authMiddleware, userLogoutHandler);
+router.delete("/delete", authMiddleware, userDeletionHandler);
 
 export default router;

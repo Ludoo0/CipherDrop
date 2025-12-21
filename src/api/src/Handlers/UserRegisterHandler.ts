@@ -24,7 +24,7 @@ export async function userRegisterHandler(req: Request, res: Response){
             createdAt: new Date()
         };
         await pool.query(
-            'INSERT INTO users (username, email, password_hash, created_at) VALUES ($1, $2, $3, $4)',
+            'INSERT INTO users (username, email, passwordHash, created_at) VALUES ($1, $2, $3, $4)',
             [newUser.username, newUser.email, newUser.passwordHash, newUser.createdAt]
         );
         await redisClient.set("user:" + username, JSON.stringify(newUser), {
