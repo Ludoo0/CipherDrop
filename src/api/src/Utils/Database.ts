@@ -47,3 +47,13 @@ export async function getUserByName(userName: string) {
         return result.rows[0];
     }
 }
+export async function getAllUsers() {
+    const result = await pool.query('SELECT * FROM users');
+    for (const user of result.rows) {
+        await redisClient.set(`user:${user.username}`, JSON.stringify(user), {
+            EX: 3600 // one-hour expiration
+        });
+    }
+
+    return result.rows;
+}

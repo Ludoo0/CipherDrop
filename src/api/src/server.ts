@@ -34,6 +34,7 @@ app.use(session({
 // Routes
 app.use("/secrets", (await import('./Routes/SecretsRouter.js')).default);
 app.use("/users", (await import('./Routes/UsersRouter.js')).default);
+app.use("/admin", (await import('./Routes/AdminRouter.js')).default);
 
 // Health Check Endpoint
 app.get('/health', (req, res) => {

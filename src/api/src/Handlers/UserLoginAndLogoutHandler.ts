@@ -14,6 +14,7 @@ export async function userLoginHandler(req: Request, res: Response) {
 
         req.session.isLoggedIn = true;
         req.session.username = username;
+        req.session.admin = user.isAdmin || false;
         return req.session.save((err) => {
             if (err) return res.status(500).send("Fehler beim Speichern");
             res.status(200).json({message: 'Login successful', userName: username});
