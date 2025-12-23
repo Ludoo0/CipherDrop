@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Cipherdrop Login</title>
+		<link rel="stylesheet" href="style.css" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+			rel="stylesheet"
+		/>
+	</head>
+	<body>
+		<!-- Navbar -->
+		<div class="navbar">
+			<a href="/"><img src="assets/logo_white.png" alt="logo" /></a>
+			<h1>Cipherdrop</h1>
+			<div class="dropdown">
+				<button class="dropbtn">Menu</button>
+				<div class="dropdown-content">
+					<a href="/">Home</a>
+					<a href="/send">Leave Message</a>
+					<a href="/read">Read Message</a>
+					<a href="/login">Login/Register</a>
+				</div>
+			</div>
+		</div>
+		<!-- Main Content -->
+		<div class="main-content">
+			<div class="wrapper">
+				<div class="login">
+					<h1>Login</h1>
+					<p>Welcome back! Please login to your account.</p>
+					<form onsubmit="login(event)">
+						<div class="input-container">
+							<label for="login-username">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									height="24px"
+									viewBox="0 -960 960 960"
+									width="24px"
+									fill="#000000"
+								>
+									<path
+										d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z"
+									/>
+								</svg>
+							</label>
+							<input
+								type="text"
+								placeholder="Username"
+								name="username"
+								id="login-username"
+								required
+							/>
+						</div>
+						<div class="input-container">
+							<label for="login-password">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									height="24px"
+									viewBox="0 -960 960 960"
+									width="24px"
+									fill="#000000"
+								>
+									<path
+										d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm240-200q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80Z"
+									/>
+								</svg>
+							</label>
+							<input
+								type="password"
+								placeholder="Password"
+								name="password"
+								id="login-password"
+								required
+							/>
+						</div>
+						<p>New Here? <a href="" onclick="loginToggle()">Sign up</a></p>
+						<button type="submit">Login</button>
+						<div id="login-result"></div>
+					</form>
+				</div>
+				<div class="register" style="display: none">
+					<h2>Sign up</h2>
+					<p>Create an account to start using Cipherdrop!</p>
+					<form onsubmit="register(event)">
+						<div class="input-container">
+							<label for="reg-username">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									height="24px"
+									viewBox="0 -960 960 960"
+									width="24px"
+									fill="#000000"
+								>
+									<path
+										d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z"
+									/>
+								</svg>
+							</label>
+							<input
+								type="text"
+								placeholder="Username"
+								name="reg-username"
+								id="reg-username"
+								required
+							/>
+						</div>
+						<div class="input-container">
+							<label for="reg-email">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									height="24px"
+									viewBox="0 -960 960 960"
+									width="24px"
+									fill="#000000"
+								>
+									<path
+										d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480v58q0 59-40.5 100.5T740-280q-35 0-66-15t-52-43q-29 29-65.5 43.5T480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480v58q0 26 17 44t43 18q26 0 43-18t17-44v-58q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93h200v80H480Zm0-280q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Z"
+									/>
+								</svg>
+							</label>
+							<input
+								type="email"
+								placeholder="Email"
+								name="reg-email"
+								id="reg-email"
+								required
+							/>
+						</div>
+						<div class="input-container">
+							<label for="reg-password">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									height="24px"
+									viewBox="0 -960 960 960"
+									width="24px"
+									fill="#000000"
+								>
+									<path
+										d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm240-200q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80Z"
+									/>
+								</svg>
+							</label>
+							<input
+								type="password"
+								placeholder="Password"
+								name="reg-password"
+								id="reg-password"
+								required
+							/>
+						</div>
+						<div class="input-container">
+							<label for="reg-confirm-password">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									height="24px"
+									viewBox="0 -960 960 960"
+									width="24px"
+									fill="#000000"
+								>
+									<path
+										d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm240-200q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80Z"
+									/>
+								</svg>
+							</label>
+							<input
+								type="password"
+								placeholder="Confirm Password"
+								name="reg-confirm-password"
+								id="reg-confirm-password"
+								required
+							/>
+						</div>
+						<p>
+							Already have an account?
+							<a href="" onclick="loginToggle()">Login</a>
+						</p>
+						<button type="submit">Sign up</button>
+						<div id="reg-result"></div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<script src="login.js"></script>
+	</body>
+</html>

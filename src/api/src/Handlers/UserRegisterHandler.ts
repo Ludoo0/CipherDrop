@@ -2,16 +2,17 @@ import type {Request, Response} from "express";
 import validator from "validator";
 import {getUserByName, pool} from "../Utils/Database.js";
 import redisClient from "../Utils/Redis.js";
+import bcrypt from "bcryptjs";
 
 export async function userRegisterHandler(req: Request, res: Response){
-    const { email, username, passwordHash } = req.body;
+    const { email, username, password } = req.body;
     if (!validator.isEmail(email)) {
         return res.status(400).json({ error: 'Invalid email' });
     }
-    if (!email || !username || !passwordHash) {
-        return res.status(400).json({ error: 'Email, username, and passwordHash are required' });
+    if (!email || !username || !password) {
+        return res.status(400).json({ error: 'Email, username, and password are required' });
     }
-
+    const passwordHash = await bcrypt.hash(password, 10);
     try {
         const existingUser = await getUserByName(username);
         if (existingUser) {

@@ -1,13 +1,14 @@
 import {getUserByName} from "../Utils/Database.js";
 import type {Request, Response} from "express";
+import bcrypt from "bcryptjs";
 
 export async function userLoginHandler(req: Request, res: Response) {
-    const { username, passwordHash } = req.body;
+    const { username, password } = req.body;
 
     try {
         const user = await getUserByName(username);
-        console.log(user);
-        console.log(passwordHash);
+        const passwordHash = await bcrypt.hash(password, 10);        
+
         if (!user || user.passwordHash !== passwordHash) {
             return res.status(401).json({error: 'Invalid username or password'});
         }
