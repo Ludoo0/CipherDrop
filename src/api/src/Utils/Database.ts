@@ -18,7 +18,30 @@ pool.connect()
         Logger.log(Logger.logLevels.ERROR, Logger.contexts.DB, `Database connection error: ${err.message}`)
     );
 
+export async function setup(){
+    const createTableQuery = `
+    CREATE TABLE IF NOT EXISTS users (
+        username VARCHAR(50) PRIMARY KEY,
+        email VARCHAR(100) UNIQUE NOT NULL,
+        passwordHash VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        isAdmin BOOLEAN DEFAULT FALSE
+    );
+    CREATE TABLE IF NOT EXISTS secrets  (  
+        id SERIAL PRIMARY KEY,  
+        owner VARCHAR(50) REFERENCES users(username) ON DELETE CASCADE,  
+        secret_data TEXT NOT NULL,  
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  
+    );
+`;
 
+    try {
+        await pool.query(createTableQuery);
+        Logger.log(Logger.logLevels.INFO, Logger.contexts.DB, 'Tables ensured in database');
+    } catch (error) {
+        Logger.log(Logger.logLevels.ERROR, Logger.contexts.DB, `Error creating users table: ${error}`);
+    }
+}
 
 export async function getUserByName(userName: string) {
     const cacheKey = `user:${userName}`;

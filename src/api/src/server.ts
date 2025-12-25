@@ -4,8 +4,13 @@ import helmet from "helmet";
 import dotenv from "dotenv";
 import {Logger} from "./Utils/Logger.js";
 import session from "express-session";
+import {setup} from "./Utils/Database.js";
 
 dotenv.config({quiet: true});
+// Initialize Database
+await setup();
+
+// Create Express app
 const app = express();
 const PORT = process.env.PORT || 8000;
 

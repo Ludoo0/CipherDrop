@@ -24,6 +24,10 @@ export async function userRegisterHandler(req: Request, res: Response){
             passwordHash: passwordHash,
             createdAt: new Date()
         };
+        const existingEmailResult = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        if (existingEmailResult.rows.length > 0) {
+            return res.status(409).json({ error: 'Email already in use' });
+        }
         await pool.query(
             'INSERT INTO users (username, email, passwordHash, created_at) VALUES ($1, $2, $3, $4)',
             [newUser.username, newUser.email, newUser.passwordHash, newUser.createdAt]

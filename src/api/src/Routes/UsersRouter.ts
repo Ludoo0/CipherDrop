@@ -19,6 +19,9 @@ const router = express.Router();
 
 router.post("/register", validateData(UserRegisterRequestSchema), userRegisterHandler);
 router.post("/login", validateData(UserLoginRequestSchema), userLoginHandler);
+router.get("/loginstatus", authMiddleware, (req, res) => {
+    res.status(200).json({ loggedIn: true, username: req.session.username, isAdmin: req.session.admin || false });
+});
 router.delete("/logout", authMiddleware, userLogoutHandler);
 router.delete("/delete", authMiddleware, userDeletionHandler);
 

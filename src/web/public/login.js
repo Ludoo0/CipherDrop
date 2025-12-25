@@ -31,6 +31,11 @@ function login(event) {
     const password = document.getElementById('login-password').value;
     const resultDiv = document.getElementById('login-result');
 
+    if (!(password.length >= 8)) {
+        resultDiv.innerText = 'Password must be at least 8 characters long.';
+        return;
+    }
+
     const payload = {
         username: username,
         password: password
