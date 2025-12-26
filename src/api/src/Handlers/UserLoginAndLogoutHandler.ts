@@ -7,8 +7,11 @@ export async function userLoginHandler(req: Request, res: Response) {
 
     try {
         const user = await getUserByName(username);
-        const isValidPassword = await bcrypt.compare(password, user ? user.passwordHash : '');
-        if (!user || !isValidPassword) {
+        if (!user) {
+            return res.status(401).json({error: 'Invalid username or password'});
+        }
+        const isValidPassword = await bcrypt.compare(password, user.passwordhash);
+        if (!isValidPassword) {
             return res.status(401).json({error: 'Invalid username or password'});
         }
 

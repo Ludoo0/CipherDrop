@@ -21,7 +21,7 @@ export async function userRegisterHandler(req: Request, res: Response){
         const newUser = {
             username: username,
             email: email,
-            passwordHash: passwordHash,
+            passwordhash: passwordHash,
             createdAt: new Date()
         };
         const existingEmailResult = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
@@ -30,7 +30,7 @@ export async function userRegisterHandler(req: Request, res: Response){
         }
         await pool.query(
             'INSERT INTO users (username, email, passwordHash, created_at) VALUES ($1, $2, $3, $4)',
-            [newUser.username, newUser.email, newUser.passwordHash, newUser.createdAt]
+            [newUser.username, newUser.email, newUser.passwordhash, newUser.createdAt]
         );
         await redisClient.set("user:" + username, JSON.stringify(newUser), {
             EX: 3600 // 1 hour expiration

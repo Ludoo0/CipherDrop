@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Cipherdrop Dashboard</title>
+		<link rel="stylesheet" href="style.css" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+			rel="stylesheet"
+		/>
+	</head>
+	<body>
+		<!-- Navbar -->
+		<div class="navbar">
+			<a href="/"><img src="assets/logo_white.png" alt="logo" /></a>
+			<h1>Cipherdrop</h1>
+			<div class="dropdown">
+				<button class="dropbtn">Menu</button>
+				<div class="dropdown-content">
+					<a href="/">Home</a>
+					<a href="/send">Leave Message</a>
+					<a href="/read">Read Message</a>
+					<a href="/login">Login/Register</a>
+				</div>
+			</div>
+		</div>
+		<!-- Main Content -->
+		<div class="main-content">
+			<h2>Dashboard</h2>
+			<p>
+				Welcome to your Cipherdrop dashboard. Here you can manage your messages
+				and account settings.
+			</p>
+            <div id="secrets-list">
+                <h3>Your Secret Messages</h3>
+                <ul id="messages-ul">
+                    <!-- Messages will be populated here by dashboard.js -->
+                </ul>
+            </div>
+
+		</div>
+		<script src="dashboard.js"></script>
+	</body>
+</html>

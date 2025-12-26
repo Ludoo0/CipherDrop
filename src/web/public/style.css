@@ -182,3 +182,10 @@ body {
     align-items: center;
     flex-direction: column;
 }
+
+#secrets-list {
+    margin-top: 30px;
+    background-color: #b4b4b47e;
+    padding: 15px;
+    border-radius: 10px;
+}

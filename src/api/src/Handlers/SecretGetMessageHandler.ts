@@ -30,6 +30,7 @@ export async function SecretGetMessageHandler(req: Request, res: Response) {
 
     if (secretData.opens >= secretData.burnsAfterXOpens) {
         await redisClient.del("secrets:" + id);
+        await redisClient.sRem(`usersecrets:${secretData.owner}`, id);
         Logger.log(Logger.logLevels.DEBUG, Logger.contexts.ROUTES, `Secret id ${id} has been accessed and burned after ${secretData.opens} opens`);
     } else {
         await redisClient.set("secrets:" + id, JSON.stringify(secretData));
