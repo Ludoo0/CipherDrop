@@ -28,7 +28,7 @@ window.onload = async function() {
         const secretsDiv = document.getElementById('messages-ul');
         secretsData.secrets.forEach(secret => {
             const secretItem = document.createElement('div');
-            secretItem.innerText = `Secret: ${secret.id}: \n(${secret.opens}/${secret.burnsAfterXOpens}) opens`;
+            secretItem.innerText = `Secret: \n\nID: ${secret.id} \nOpenings: (${secret.opens}/${secret.burnsAfterXOpens})\nFile: ${secret.file!==null ? "Yes": "No"}`;
             secretsDiv.appendChild(secretItem);
         });
     }
