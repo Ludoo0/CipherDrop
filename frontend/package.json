@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
-    "preview": "vite preview --host 0.0.0.0"
+    "preview": "vite preview --host 0.0.0.0",
+    "typecheck": "bun check",
+    "lint": "biome check src",
+    "lint:fix": "biome check src --fix"
   },
   "dependencies": {
     "crypto-js": "^4.2.0",
@@ -15,6 +18,7 @@
     "react-router-dom": "^7.1.5"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.6.4",
     "@types/crypto-js": "^4.2.2",
     "@types/node": "^22.13.4",
     "@types/react": "^19.0.8",

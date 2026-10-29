@@ -150,9 +150,9 @@ app.use(
   }),
 );
 
-app.use("/secrets", (await import("./Routes/SecretsRouter.js")).default);
-app.use("/users", (await import("./Routes/UsersRouter.js")).default);
-app.use("/admin", (await import("./Routes/AdminRouter.js")).default);
+app.use("/secrets", (await import("./Routes/SecretsRouter")).default);
+app.use("/users", (await import("./Routes/UsersRouter")).default);
+app.use("/admin", (await import("./Routes/AdminRouter")).default);
 app.get("/health", (_req, res) => res.status(200).json({ status: "OK" }));
 
 app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {

@@ -1,7 +1,7 @@
 services:
   backend:
     build:
-      context: ./src/api
+      context: backend
       dockerfile: Dockerfile
     environment:
       http://127:
@@ -27,7 +27,7 @@ services:
 
   frontend:
     build:
-      context: ./src/web
+      context: frontend
       dockerfile: Dockerfile
     ports:
       - "127.0.0.1:8001:80"

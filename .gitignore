@@ -1,6 +1,6 @@
 .env
 node_modules
 dist
-src/web/.bun-cache/
+.bun-cache/
 .taste-skill/
 .idea

@@ -20,9 +20,9 @@ The site and its service ports are bound to localhost by default. `COOKIE_SECURE
 
 ## Local development
 
-Run PostgreSQL and Redis, then configure the backend variables from `.env.example` in `src/api/.env` (use `DB_HOST=localhost` and `REDIS_URL=redis://localhost:6379`). Start the backend with `npm run dev` from `src/api`.
+Run PostgreSQL and Redis, then configure the backend variables from `.env.example` in `backend/.env` (use `DB_HOST=localhost` and `REDIS_URL=redis://localhost:6379`). Start the backend with `npm run dev` from `api`.
 
-For the frontend, run `bun install` and `bun run dev` from `src/web`. Vite proxies `/api` requests to `http://localhost:8000`; override this with `API_PROXY_TARGET` if needed.
+For the frontend, run `bun install` and `bun run dev` from `web`. Vite proxies `/api` requests to `http://localhost:8000`; override this with `API_PROXY_TARGET` if needed.
 
 ## API compatibility
 
