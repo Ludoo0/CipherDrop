@@ -1,7 +1,7 @@
 {
   "name": "cipherdropbackend",
   "version": "1.0.0",
-  "description": "",
+  "description": "CipherDrop API for private, self-expiring messages",
   "homepage": "https://github.com/Ludoo0/CipherDrop#readme",
   "bugs": {
     "url": "https://github.com/Ludoo0/CipherDrop/issues"
@@ -13,12 +13,11 @@
   "license": "MIT",
   "author": "Ludoo0",
   "type": "module",
-  "main": "index.js",
   "scripts": {
-    "dev": "ts-node src/server.ts",
+    "dev": "node --watch --import ts-node/esm src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint src --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix"
   },
   "dependencies": {
@@ -27,13 +26,10 @@
     "express": "^5.1.0",
     "express-rate-limit": "^8.2.1",
     "express-session": "^1.18.2",
-    "helm": "^0.2.1",
     "helmet": "^8.1.0",
-    "nodemon": "^3.1.11",
     "pg": "^8.16.3",
     "qrcode": "^1.5.4",
     "redis": "^5.10.0",
-    "validator": "^13.15.26",
     "zod": "^4.1.13"
   },
   "devDependencies": {
@@ -43,7 +39,6 @@
     "@types/node": "^24.10.1",
     "@types/pg": "^8.16.0",
     "@types/qrcode": "^1.5.6",
-    "@types/validator": "^13.15.10",
     "@typescript-eslint/eslint-plugin": "^8.48.0",
     "@typescript-eslint/parser": "^8.48.0",
     "eslint": "^9.39.1",

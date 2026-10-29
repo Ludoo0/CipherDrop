@@ -1,6 +1,6 @@
 import {z} from "zod";
 
 export const UserLoginRequestSchema = z.object({
-    username: z.string().min(1).max(5000),
+    username: z.string().trim().min(1).max(50),
     password: z.string().min(8).max(255),
 });

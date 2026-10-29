@@ -26,7 +26,7 @@ export function validateData<T extends ZodTypeAny>(schema: T) {
 
             return res.status(422).json({
                 error: "Invalid request data",
-                details: error.issues,
+                details: error.issues.map(({ code, path, message }) => ({ code, path, message })),
             });
         }
 

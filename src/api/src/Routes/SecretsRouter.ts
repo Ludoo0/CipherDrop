@@ -18,6 +18,7 @@ const router = express.Router();
 router.post('/register', validateData(SecretRegisterRequestSchema), SecretRegisterHandler);
 router.get("/exists/:id", SecretExistanceHandler);
 router.get('/:id', SecretGetMessageHandler);
+router.post('/:id', SecretGetMessageHandler);
 
 
 

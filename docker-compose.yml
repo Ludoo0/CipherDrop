@@ -3,51 +3,70 @@ services:
     build:
       context: ./src/api
       dockerfile: Dockerfile
-    container_name: cipherdrop-backend
-    ports:
-      - "8000:8000"
-    env_file:
-      - src/api/.env
     environment:
-      - NODE_ENV=production
-      - FORCE_COLOR=1
+      http://127:
+      NODE_ENV: ${NODE_ENV:-development}
+      PORT: ${PORT:-8000}
+      BASE_URL: ${BASE_URL:-http://localhost:8001}
+      SESSION_SECRET: ${SESSION_SECRET:?Copy .env.example to .env and set SESSION_SECRET}
+      DB_HOST: ${DB_HOST:-db}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_USER: ${DB_USER:-cipherdrop}
+      DB_PASSWORD: ${DB_PASSWORD:?Copy .env.example to .env and set DB_PASSWORD}
+      DB_NAME: ${DB_NAME:-cipherdropdb}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+    ports:
+      - "127.0.0.1:8000:8000"
     restart: unless-stopped
     depends_on:
-      - redis
-      - db
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
   frontend:
     build:
       context: ./src/web
       dockerfile: Dockerfile
-    container_name: cipherdrop-frontend
     ports:
-      - "8001:80"
+      - "127.0.0.1:8001:80"
     restart: unless-stopped
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
 
   redis:
-    image: redis:7
-    container_name: cipherdrop-redis
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"
     volumes:
       - redis-data:/data
-    command: [ "redis-server", "--appendonly", "yes" ]
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
   db:
-    image: postgres:15
-    container_name: cipherdrop-db
-    ports:
-      - "5432:5432"
+    image: postgres:15-alpine
     environment:
-      - POSTGRES_USER=cipherdrop
-      - POSTGRES_PASSWORD=securepassword
-      - POSTGRES_DB=cipherdropdb
+      POSTGRES_USER: cipherdrop
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Copy .env.example to .env and set DB_PASSWORD}
+      POSTGRES_DB: cipherdropdb
+    ports:
+      - "127.0.0.1:5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cipherdrop -d cipherdropdb"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
 volumes:
-    redis-data:
-    db-data:
+  redis-data:
+  db-data:

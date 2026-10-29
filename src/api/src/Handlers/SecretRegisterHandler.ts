@@ -1,65 +1,39 @@
-import {randomUUID} from "crypto";
-import redisClient from "../Utils/Redis.js";
-import {Logger} from "../Utils/Logger.js";
-import qrcode from "qrcode";
+import { randomUUID } from "node:crypto";
 import type { Request, Response } from "express";
+import qrcode from "qrcode";
+import { pool } from "../Utils/Database.js";
+import redisClient from "../Utils/Redis.js";
+import { Logger } from "../Utils/Logger.js";
+import type { SecretData } from "../types/types.js";
 
 export async function SecretRegisterHandler(req: Request, res: Response) {
     const body = req.body;
-    if (!body || !body.message || !body.controlmessage) {
-        return res.status(400).json({error: 'securemessage and controlmessage are required'});
-    }
-
-    if (!body.file) {
-        body.file=null;
-    }
-
     const id = randomUUID();
-    const secretData: secretData = {
-        id: id,
+    const persistent = Boolean(req.session.username && body.ttl === undefined);
+    const expiration = persistent ? null : (body.ttl ?? 3600);
+    const secret: SecretData = {
+        id,
         message: body.message,
         controlmessage: body.controlmessage,
-        burnsAfterXOpens: body.burnsAfterXOpens || 1,
+        burnsAfterXOpens: body.burnsAfterXOpens ?? 1,
         opens: 0,
-        file: body.file,
+        owner: req.session.username ?? null,
+        file: body.file ?? null,
     };
-    let expiration: number;
-    if (req.session.username) {
-        secretData.owner = req.session.username;
-        expiration = body.ttl ? parseInt(body.ttl) : 3600; // Default to 24 hours
-        await redisClient.multi()
-            .set("secrets:" + id, JSON.stringify(secretData), {
-                EX: expiration
-            })
-            .sAdd(`usersecrets:${req.session.username}`, id)
-            .exec();
 
-
+    if (persistent) {
+        await pool.query(
+            "INSERT INTO secrets (id, owner, secret_data, created_at) VALUES ($1, $2, $3, NOW())",
+            [id, secret.owner, JSON.stringify(secret)],
+        );
     } else {
-        secretData.owner = null;
-        expiration = body.ttl ? parseInt(body.ttl) : 3600; // Default to 24 hours
-        await redisClient.set("secrets:" + id, JSON.stringify(secretData), {
-            EX: expiration
-        });
-
+        const commands = redisClient.multi().set(`secrets:${id}`, JSON.stringify(secret), { EX: body.ttl ?? 3600 });
+        if (secret.owner) commands.sAdd(`usersecrets:${secret.owner}`, id);
+        await commands.exec();
     }
-    const qrCodeDataURL = await qrcode.toDataURL(`${process.env.BASE_URL}/read?messageId=${id}`);
 
-    Logger.log(Logger.logLevels.DEBUG, Logger.contexts.ROUTES, `Registered new secret with id ${id}, expires in ${expiration} seconds`);
-    res.status(200).json({id, expiration, qrCodeDataURL});
-}
-
-
-type secretData = {
-    id: string;
-    message: string;
-    controlmessage: string;
-    burnsAfterXOpens: number;
-    opens: number;
-    owner?: string | null;
-    file: {
-        name: string;
-        type: string;
-        data: string;
-    } | null;
+    const baseUrl = (process.env.BASE_URL || "http://localhost:8001").replace(/\/$/, "");
+    const qrCodeDataURL = await qrcode.toDataURL(`${baseUrl}/read?messageId=${id}`);
+    Logger.log(Logger.logLevels.INFO, Logger.contexts.ROUTES, `Registered a secret (${persistent ? "persistent" : `${expiration}s TTL`})`);
+    return res.status(200).json({ id, expiration, qrCodeDataURL });
 }

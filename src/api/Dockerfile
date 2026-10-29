@@ -1,35 +1,17 @@
-# ---- Basisimage ----
 FROM node:20-alpine AS builder
-
-# Arbeitsverzeichnis
 WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY tsconfig.json ./
+COPY src ./src
+RUN npm run build
 
-# Package-Dateien zuerst kopieren (bessere Caching-Effizienz)
-COPY package*.json ./
-
-# Dev-Dependencies installieren (inkl. TypeScript)
-RUN npm install
-
-# Restlichen Code kopieren
-COPY . .
-
-# TypeScript-Code bauen
-RUN npx tsc
-
-# ---- Produktions-Image ----
-FROM node:20-alpine
-
+FROM node:20-alpine AS runtime
+ENV NODE_ENV=production
 WORKDIR /app
-
-# Nur production dependencies installieren
-COPY package*.json ./
-RUN npm install --production
-
-# Kompilierten Code kopieren
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev && npm cache clean --force
 COPY --from=builder /app/dist ./dist
-
-# Falls dein Server auf Port 3000 läuft
-EXPOSE 3000
-
-# Startbefehl: kompilierten JS-Code aus dist ausführen
-CMD [ "npm", "start" ]
+EXPOSE 8000
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 CMD node -e "fetch('http://127.0.0.1:8000/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+CMD ["node", "dist/server.js"]

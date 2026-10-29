@@ -1,50 +1,32 @@
-import type {Request, Response} from "express";
-import validator from "validator";
-import {getUserByName, pool} from "../Utils/Database.js";
-import redisClient from "../Utils/Redis.js";
+import type { Request, Response } from "express";
 import bcrypt from "bcryptjs";
+import { pool } from "../Utils/Database.js";
 
-export async function userRegisterHandler(req: Request, res: Response){
+export async function userRegisterHandler(req: Request, res: Response) {
     const { email, username, password } = req.body;
-    if (!validator.isEmail(email)) {
-        return res.status(400).json({ error: 'Invalid email' });
-    }
-    if (!email || !username || !password) {
-        return res.status(400).json({ error: 'Email, username, and password are required' });
-    }
-    const passwordHash = await bcrypt.hash(password, 10);
+    const normalizedEmail = email.trim().toLowerCase();
+    const passwordHash = await bcrypt.hash(password, 12);
+
     try {
-        const existingUser = await getUserByName(username);
-        if (existingUser) {
-            return res.status(409).json({ error: 'Username already exists' });
-        }
-        const newUser = {
-            username: username,
-            email: email,
-            passwordhash: passwordHash,
-            createdAt: new Date()
-        };
-        const existingEmailResult = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-        if (existingEmailResult.rows.length > 0) {
-            return res.status(409).json({ error: 'Email already in use' });
-        }
         await pool.query(
-            'INSERT INTO users (username, email, passwordHash, created_at) VALUES ($1, $2, $3, $4)',
-            [newUser.username, newUser.email, newUser.passwordhash, newUser.createdAt]
+            "INSERT INTO users (username, email, passwordhash, created_at) VALUES ($1, $2, $3, NOW())",
+            [username, normalizedEmail, passwordHash],
         );
-        await redisClient.set("user:" + username, JSON.stringify(newUser), {
-            EX: 3600 // 1 hour expiration
-        });
-        res.status(201).json({ message: 'User registered successfully', userName: username });
-        // Automatically log in the user after registration
+    } catch (error) {
+        if (typeof error === "object" && error !== null && "code" in error && error.code === "23505") {
+            return res.status(409).json({ error: "Username or email already in use" });
+        }
+        throw error;
+    }
+
+    return req.session.regenerate((error) => {
+        if (error) return res.status(500).json({ error: "Account created, but session could not be started" });
         req.session.isLoggedIn = true;
         req.session.username = username;
-        return req.session.save((err) => {
-            if (err) return res.status(500).send("Fehler beim Speichern");
+        req.session.admin = false;
+        return req.session.save((saveError) => {
+            if (saveError) return res.status(500).json({ error: "Account created, but session could not be saved" });
+            return res.status(201).json({ message: "User registered successfully", userName: username });
         });
-
-    } catch (error) {
-        console.error('Error registering user:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
+    });
 }

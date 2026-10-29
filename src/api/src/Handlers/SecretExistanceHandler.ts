@@ -1,8 +1,7 @@
-import redisClient from "../Utils/Redis.js";
 import type { Request, Response } from "express";
+import { inspectSecret } from "../Utils/Secrets.js";
 
-export async function SecretExistanceHandler(req: Request, res: Response){
-    const id = req.params.id;
-    const exists = await redisClient.exists("secrets:" + id);
-    res.status(200).json({ exists: exists === 1 });
+export async function SecretExistanceHandler(req: Request, res: Response) {
+    if (!/^[a-zA-Z0-9-]{1,36}$/.test(req.params.id)) return res.status(400).json({ error: "Invalid secret ID" });
+    return res.status(200).json(await inspectSecret(req.params.id));
 }

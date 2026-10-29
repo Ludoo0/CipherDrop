@@ -1,47 +1,30 @@
-import redisClient from "../Utils/Redis.js";
-import {Logger} from "../Utils/Logger.js";
 import type { Request, Response } from "express";
+import { Logger } from "../Utils/Logger.js";
+import { accessSecret } from "../Utils/Secrets.js";
 
 export async function SecretGetMessageHandler(req: Request, res: Response) {
     const id = req.params.id;
-    const query = req.query;
-    if (!query || !query.controlmessage) {
-        return res.status(400).json({error: 'controlmessage is required'});
-    }
-    const controlmessage = query.controlmessage;
-
-    const secretString = await redisClient.get("secrets:" + id);
-    if (!secretString) {
-        Logger.log(
-            Logger.logLevels.DEBUG,
-            Logger.contexts.ROUTES,
-            `Secret with id ${id} could not be found`
-        );
-        return res.status(404).json({error: 'Secret not found or has expired'});
+    if (!/^[a-zA-Z0-9-]{1,36}$/.test(id)) return res.status(400).json({ error: "Invalid secret ID" });
+    const controlmessage = req.method === "POST" ? req.body?.controlmessage : req.query.controlmessage;
+    if (typeof controlmessage !== "string" || controlmessage.length === 0 || controlmessage.length > 256) {
+        return res.status(400).json({ error: "controlmessage is required" });
     }
 
-    const secretData = JSON.parse(secretString);
-    if (secretData.controlmessage !== controlmessage) {
-        Logger.log(Logger.logLevels.DEBUG, Logger.contexts.ROUTES, `Invalid controlmessage attempt for secret id ${id}`);
-        return res.status(403).json({error: 'Invalid controlmessage'});
+    const result = await accessSecret(id, controlmessage);
+    if (result.status === "missing") {
+        return res.status(404).json({ error: "Secret not found or has expired" });
+    }
+    if (result.status === "invalid") {
+        Logger.log(Logger.logLevels.WARN, Logger.contexts.ROUTES, "Rejected a secret access with an invalid control value");
+        return res.status(403).json({ error: "Invalid controlmessage" });
     }
 
-    secretData.opens += 1;
-
-    if (secretData.opens >= secretData.burnsAfterXOpens) {
-        await redisClient.del("secrets:" + id);
-        await redisClient.sRem(`usersecrets:${secretData.owner}`, id);
-        Logger.log(Logger.logLevels.DEBUG, Logger.contexts.ROUTES, `Secret id ${id} has been accessed and burned after ${secretData.opens} opens`);
-    } else {
-        await redisClient.set("secrets:" + id, JSON.stringify(secretData));
-        Logger.log(Logger.logLevels.DEBUG, Logger.contexts.ROUTES, `Secret id ${id} accessed, opens: (${secretData.opens}/${secretData.burnsAfterXOpens})`);
-    }
-
-    res.status(200).json({
-        message: secretData.message,
-        controlmessage: secretData.controlmessage,
-        opens: secretData.opens,
-        burnsAfterXOpens: secretData.burnsAfterXOpens,
-        file: secretData.file || null,
+    const { secret } = result;
+    return res.status(200).json({
+        message: secret.message,
+        opens: secret.opens,
+        burnsAfterXOpens: secret.burnsAfterXOpens,
+        file: secret.file,
+        ...(req.method === "GET" ? { controlmessage: secret.controlmessage } : {}),
     });
 }
