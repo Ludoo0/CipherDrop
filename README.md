@@ -4,7 +4,7 @@ CipherDrop creates private, self-expiring messages. Message text and attachments
 
 ## Stack
 
-- Backend: Node.js, Express, TypeScript, PostgreSQL and Redis
+- Backend: Bun, Express, TypeScript, PostgreSQL and Redis
 - Frontend: React, Vite and TypeScript, built with Bun and served by Nginx
 - Encryption: browser Web Crypto (AES-GCM, PBKDF2 and HKDF) for new messages; CryptoJS remains for opening legacy messages
 
@@ -20,9 +20,9 @@ The site and its service ports are bound to localhost by default. `COOKIE_SECURE
 
 ## Local development
 
-Run PostgreSQL and Redis, then configure the backend variables from `.env.example` in `backend/.env` (use `DB_HOST=localhost` and `REDIS_URL=redis://localhost:6379`). Start the backend with `npm run dev` from `api`.
+Run PostgreSQL and Redis, then configure the backend variables from `.env.example` in `.env` (use `DB_HOST=localhost` and `REDIS_URL=redis://localhost:6379`). Start the backend with `bun run dev` from `backend`.
 
-For the frontend, run `bun install` and `bun run dev` from `web`. Vite proxies `/api` requests to `http://localhost:8000`; override this with `API_PROXY_TARGET` if needed.
+For the frontend, run `bun install` and `bun run dev` from `frontend`. Vite proxies `/api` requests to `http://localhost:8000`; override this with `API_PROXY_TARGET` if needed.
 
 ## API compatibility
 
