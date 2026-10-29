@@ -13,7 +13,7 @@ const schema = z.object({
   DB_PASSWORD: z.string().min(1),
   DB_NAME: z.string().min(1).default("cipherdropdb"),
   REDIS_URL: z.string().min(1).default("redis://redis:6379"),
-  COOKIE_SECURE: z.boolean().default(false),
+  COOKIE_SECURE: z.stringbool().default(false),
 });
 
 export const env = schema.parse(process.env);

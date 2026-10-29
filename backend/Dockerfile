@@ -17,5 +17,5 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s \
-    CMD wget -qO- http://localhost:3000/health >/dev/null || exit 1
+    CMD wget -qO- http://localhost:8000/health >/dev/null || exit 1
 CMD ["bun", "dist/server.js"]
