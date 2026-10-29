@@ -1,17 +1,21 @@
-FROM node:20-alpine AS builder
+FROM oven/bun:1.4.4-alpine AS builder
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci
+
+COPY package.json bun.lock ./
+
+RUN bun install --frozen-lockfile
+
 COPY tsconfig.json ./
 COPY src ./src
-RUN npm run build
 
-FROM node:20-alpine AS runtime
+RUN bun run build
+
+FROM oven/bun:1.4.4-alpine AS runtime
 ENV NODE_ENV=production
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci --omit=dev && npm cache clean --force
+
 COPY --from=builder /app/dist ./dist
 EXPOSE 8000
-HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 CMD node -e "fetch('http://127.0.0.1:8000/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
-CMD ["node", "dist/server.js"]
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s \
+    CMD wget -qO- http://localhost:3000/health >/dev/null || exit 1
+CMD ["bun", "dist/server.js"]

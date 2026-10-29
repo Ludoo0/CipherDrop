@@ -1,17 +1,18 @@
 // Import Utils
-import express from 'express';
-
+import express from "express";
 // Import Handlers
-import {allUsersHandler} from "../Handlers/AdminUserHandler.js";
-import {deleteUserHandler} from "../Handlers/AdminUserHandler.js";
+import {
+  allUsersHandler,
+  deleteUserHandler,
+} from "@/Handlers/AdminUserHandler";
 
 // Import Middlewares
-import {adminMiddleware} from "../Middleware/authMiddleware.js";
+import { adminMiddleware } from "@/Middleware/authMiddleware";
 
 // Express Router
 const router = express.Router();
 
-router.get('/users', adminMiddleware, allUsersHandler);
-router.delete('/user/:username', adminMiddleware, deleteUserHandler);
+router.get("/users", adminMiddleware, allUsersHandler);
+router.delete("/user/:username", adminMiddleware, deleteUserHandler);
 
 export default router;

@@ -1,11 +1,15 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "ES2022",
-    "moduleResolution": "node",
+    "lib": ["ESNext"],
+    "target": "ESNext",
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "types": ["bun"],
+    "noEmit": true,
     "strict": true,
-    "rootDir": "src",
-    "outDir": "dist",
-    "allowSyntheticDefaultImports": true
+    "skipLibCheck": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   }
 }

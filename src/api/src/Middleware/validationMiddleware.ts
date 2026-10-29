@@ -1,41 +1,45 @@
+import type { NextFunction, Request, Response } from "express";
 import { ZodError, type ZodTypeAny } from "zod";
-import { Logger } from "../Utils/Logger.js";
-import type { Request, Response, NextFunction } from "express";
+import { Logger } from "@/Utils/Logger";
 
 export function validateData<T extends ZodTypeAny>(schema: T) {
-    return (req: Request, res: Response, next: NextFunction) => {
-        const result = schema.safeParse(req.body);
+  return (req: Request, res: Response, next: NextFunction) => {
+    const result = schema.safeParse(req.body);
 
-        if (result.success) {
-            req.body = result.data;
-            return next();
-        }
+    if (result.success) {
+      req.body = result.data;
+      return next();
+    }
 
-        const error = result.error;
+    const error = result.error;
 
-        if (error instanceof ZodError) {
-            const issueDetails = error.issues
-                .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
-                .join(", ");
+    if (error instanceof ZodError) {
+      const issueDetails = error.issues
+        .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
+        .join(", ");
 
-            Logger.log(
-                Logger.logLevels.DEBUG,
-                Logger.contexts.MIDDLEWARE,
-                `Validation error: ${issueDetails}`
-            );
+      Logger.log(
+        Logger.logLevels.DEBUG,
+        Logger.contexts.MIDDLEWARE,
+        `Validation error: ${issueDetails}`,
+      );
 
-            return res.status(422).json({
-                error: "Invalid request data",
-                details: error.issues.map(({ code, path, message }) => ({ code, path, message })),
-            });
-        }
+      return res.status(422).json({
+        error: "Invalid request data",
+        details: error.issues.map(({ code, path, message }) => ({
+          code,
+          path,
+          message,
+        })),
+      });
+    }
 
-        Logger.log(
-            Logger.logLevels.ERROR,
-            Logger.contexts.MIDDLEWARE,
-            `Unexpected validation error: ${error}`
-        );
+    Logger.log(
+      Logger.logLevels.ERROR,
+      Logger.contexts.MIDDLEWARE,
+      `Unexpected validation error: ${error}`,
+    );
 
-        return res.status(500).json({ error: "Internal server error" });
-    };
+    return res.status(500).json({ error: "Internal server error" });
+  };
 }
