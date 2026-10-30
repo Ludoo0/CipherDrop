@@ -10,13 +10,9 @@ import { pool, setup } from "@/Utils/Database";
 import { env } from "@/Utils/env";
 import { Logger } from "@/Utils/Logger";
 import redisClient, { connectRedis } from "@/Utils/Redis";
-
-const sessionSecret = env.SESSION_SECRET;
-if (!sessionSecret || sessionSecret.length < 32) {
-  throw new Error(
-    "SESSION_SECRET must be configured with at least 32 characters",
-  );
-}
+import SecretsRouter from "@/Routes/SecretsRouter";
+import UsersRouter from "@/Routes/UsersRouter";
+import AdminRouter from "@/Routes/AdminRouter";
 
 await setup();
 await connectRedis();
@@ -97,7 +93,6 @@ class RedisSessionStore extends session.Store {
 }
 
 const app = express();
-const port = env.PORT;
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
 app.use(helmet());
@@ -120,7 +115,7 @@ app.use(
   session({
     name: "cipherdrop.sid",
     store: new RedisSessionStore(),
-    secret: sessionSecret,
+    secret: env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -150,9 +145,9 @@ app.use(
   }),
 );
 
-app.use("/secrets", (await import("./Routes/SecretsRouter")).default);
-app.use("/users", (await import("./Routes/UsersRouter")).default);
-app.use("/admin", (await import("./Routes/AdminRouter")).default);
+app.use("/secrets", SecretsRouter);
+app.use("/users", UsersRouter);
+app.use("/admin", AdminRouter);
 app.get("/health", (_req, res) => res.status(200).json({ status: "OK" }));
 
 app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
@@ -172,11 +167,11 @@ app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
   return res.status(500).json({ error: "Internal server error" });
 });
 
-const server = app.listen(port, () => {
+const server = app.listen(env.PORT, () => {
   Logger.log(
     Logger.logLevels.INFO,
     Logger.contexts.GENERAL,
-    `Server started on port ${port}`,
+    `Server started on port ${env.PORT}`,
   );
 });
 

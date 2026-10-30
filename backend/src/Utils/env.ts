@@ -6,7 +6,7 @@ const schema = z.object({
     .default("development"),
   PORT: z.coerce.number().default(8000),
   BASE_URL: z.url().default("http://localhost:8001"),
-  SESSION_SECRET: z.string().min(1),
+  SESSION_SECRET: z.string().min(32),
   DB_HOST: z.string().min(1),
   DB_PORT: z.coerce.number().default(5432),
   DB_USER: z.string().min(1).default("cipherdrop"),
