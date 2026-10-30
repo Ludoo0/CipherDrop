@@ -6,13 +6,13 @@ import express, {
 import rateLimit from "express-rate-limit";
 import session from "express-session";
 import helmet from "helmet";
+import AdminRouter from "@/Routes/AdminRouter";
+import SecretsRouter from "@/Routes/SecretsRouter";
+import UsersRouter from "@/Routes/UsersRouter";
 import { pool, setup } from "@/Utils/Database";
 import { env } from "@/Utils/env";
 import { Logger } from "@/Utils/Logger";
 import redisClient, { connectRedis } from "@/Utils/Redis";
-import SecretsRouter from "@/Routes/SecretsRouter";
-import UsersRouter from "@/Routes/UsersRouter";
-import AdminRouter from "@/Routes/AdminRouter";
 import { RedisSessionStore } from "@/Utils/RedisSessionStore";
 
 await setup();
