@@ -14,10 +14,10 @@
   "author": "Ludoo0",
   "type": "module",
   "scripts": {
-    "dev": "bun start server.ts --watch",
+    "dev": "bun run src/server.ts --watch",
     "build": "bun build src/server.ts --target=bun --outdir=dist --minify",
     "typecheck": "bun check",
-    "start": "bun start server.ts",
+    "start": "bun run src/server.ts",
     "lint": "biome check src",
     "lint:fix": "biome check src --fix"
   },
